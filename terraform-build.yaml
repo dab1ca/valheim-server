@@ -1,0 +1,50 @@
+trigger:
+- none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - template: ./pipeline/parameters/generic.yml
+
+stages:
+
+- stage: CoreBuild
+  displayName: 'Build Core Infrastructure'
+  variables:
+    - template: ./pipeline/parameters/core-parameters.yml
+  jobs:
+    - job: CorePlan
+      displayName: 'CorePlan Plan'
+      steps:
+        - template: ./pipeline/stages/tf_apply.yml
+          parameters:
+            workingDirectory: $(workingDirectory)
+            serviceConnectionName: $(serviceConnectionName)
+            environmentServiceNameAzureRM: $(serviceConnectionName)
+            backendAzureRmResourceGroupName: $(backendAzureRmResourceGroupName)
+            backendAzureRmStorageAccountName: $(backendAzureRmStorageAccountName)
+            backendAzureRmContainerName: $(backendAzureRmContainerName)
+            backendAzureRmKey: $(backendAzureRmKey)
+            artifact: $(artifact)
+            key: $(key)
+
+- stage: ServerBuild
+  displayName: 'Build Server Infrastructure'
+  variables:
+    - template: ./pipeline/parameters/server-parameters.yml
+  jobs:
+    - job: ServerPlan
+      displayName: 'Valheim Server Plan'
+      steps:
+        - template: ./pipeline/stages/tf_apply.yml
+          parameters:
+            workingDirectory: $(workingDirectory)
+            serviceConnectionName: $(serviceConnectionName)
+            environmentServiceNameAzureRM: $(serviceConnectionName)
+            backendAzureRmResourceGroupName: $(backendAzureRmResourceGroupName)
+            backendAzureRmStorageAccountName: $(backendAzureRmStorageAccountName)
+            backendAzureRmContainerName: $(backendAzureRmContainerName)
+            backendAzureRmKey: $(backendAzureRmKey)
+            artifact: $(artifact)
+            key: $(key)

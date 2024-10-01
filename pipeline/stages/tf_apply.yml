@@ -1,0 +1,58 @@
+#populated via ./parameters/connectivity_parameters.yml
+#populated via ./parameters/identity_parameters.yml
+#populated via ./parameters/management_parameters.yml
+#populated via ./parameters/sandbox_parameters.yml
+parameters:
+  - name: workingDirectory
+  - name: serviceConnectionName
+  - name: environmentServiceNameAzureRM
+  - name: backendAzureRmResourceGroupName
+  - name: backendAzureRmStorageAccountName
+  - name: backendAzureRmContainerName
+  - name: backendAzureRmKey
+  - name: artifact
+  - name: key
+
+steps:
+
+  - task: TerraformInstaller@1
+    displayName: 'Terraform install latest'
+    inputs:
+      terraformVersion: 'latest'
+
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform init'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '${{ parameters.workingDirectory }}'
+      command: 'init'
+      backendServiceArm: '${{ parameters.serviceConnectionName }}'
+      backendAzureRmResourceGroupName: '${{ parameters.backendAzureRmResourceGroupName }}'
+      backendAzureRmStorageAccountName: '${{ parameters.backendAzureRmStorageAccountName }}'
+      backendAzureRmContainerName: '${{ parameters.backendAzureRmContainerName }}'
+      backendAzureRmKey: '${{ parameters.backendAzureRmKey}}'
+
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform validate'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '${{ parameters.workingDirectory }}'
+      command: 'validate'
+
+  - task: TerraformTaskV4@4
+    displayName: 'Terraform plan'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '${{ parameters.workingDirectory }}'
+      command: 'plan'
+      commandOptions: '-input=false -out=${{ parameters.artifact }}'
+      environmentServiceNameAzureRM: '${{ parameters.serviceConnectionName }}'
+
+  - task: TerraformTaskV4@4
+    displayName: 'Terrform apply'
+    inputs:
+      provider: 'azurerm'
+      workingDirectory: '${{ parameters.workingDirectory }}'
+      command: 'apply'
+      commandOptions: '-input=false ${{ parameters.artifact }}'
+      environmentServiceNameAzureRM: '${{ parameters.serviceConnectionName }}'

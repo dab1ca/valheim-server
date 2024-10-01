@@ -1,0 +1,5 @@
+variables:
+  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/core'
+  artifact: 'server.tfplan'
+  backendAzureRmKey: 'server.tfstate'
+  key: 'server'

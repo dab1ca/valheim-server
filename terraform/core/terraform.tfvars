@@ -1,0 +1,1 @@
+rg_name = "ubuntu-server-rg"

@@ -1,0 +1,7 @@
+variables:
+  currentYear: $[format('{0:yyyy}', pipeline.startTime)]
+  currentMonth: $[format('{0:MM}', pipeline.startTime)]
+  versionPrefix: $(currentYear).$(currentMonth)
+  versionPatch: $[counter(format('{0:yyyyMM}', pipeline.startTime), 0)]
+  imageVersion: '$(versionPrefix).$(versionPatch)'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/packer/baseline-ubuntu'

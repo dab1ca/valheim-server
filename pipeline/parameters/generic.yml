@@ -1,0 +1,6 @@
+# Generic parameters for the pipeline
+variables:
+  serviceConnectionName: '' # Name of the service connection to Azure
+  backendAzureRmResourceGroupName: ''
+  backendAzureRmStorageAccountName: ''
+  backendAzureRmContainerName: ''
